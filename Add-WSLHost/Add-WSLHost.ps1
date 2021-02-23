@@ -13,9 +13,6 @@ Set-StrictMode -version Latest
 # Public Cmdlets
 ###############################################################################
 
-    Write-Host "test"
-
-
     $hostsFile = "$env:SystemRoot\System32\drivers\etc\hosts"
 
     function Test-IPAddress ([String] $IPAddress) {
