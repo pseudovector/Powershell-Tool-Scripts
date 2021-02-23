@@ -16,8 +16,7 @@ Set-StrictMode -version Latest
     Write-Host "test"
 
 
-    # $hostsFile = "$env:SystemRoot\System32\drivers\etc\hosts"
-    $hostsFile = "D:\Tony\TEMP\hosts"
+    $hostsFile = "$env:SystemRoot\System32\drivers\etc\hosts"
 
     function Test-IPAddress ([String] $IPAddress) {
         return $IPAddress -match [ipaddress] $IPAddress
