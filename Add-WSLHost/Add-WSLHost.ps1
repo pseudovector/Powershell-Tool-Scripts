@@ -77,12 +77,6 @@ Set-StrictMode -version Latest
             }
         }
 
-        Write-Host "wslIp=" $wslIp
-        Write-Host "wslHostname=" $wslHostname
-        Write-Host "adaptorIp" $adaptorIp
-        Write-Host "windowsHostname=" $windowsHostname
-
-
         if (( -not [string]::IsNullOrEmpty($wslHostname)) -and ( -not [String]::IsNullOrEmpty($wslIp))) {
             Add-HostsEntry $hostsFile $wslHostname $wslIp.trim()
         }
