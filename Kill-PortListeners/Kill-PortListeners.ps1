@@ -1,4 +1,25 @@
-Set-StrictMode -version Latest
+#requires -version 5.0
+###############################################################################
+# Copyright (c) 2021 - Pseudovector
+# 
+# Do whatever you want with this module, but please do give credit.
+###############################################################################
+
+# Always make sure all variables are defined and all best practices are 
+# followed.
+# Set-StrictMode -version Latest
+
+###############################################################################
+# Public Cmdlets
+###############################################################################
+[CmdletBinding()]
+param
+(
+    [Parameter(Position=0, Mandatory=$true)]
+    [int] $Port,
+    [Parameter(Position=1, Mandatory=$false)]
+    [switch] $Force
+)
 
 function Kill-PortListeners 
 {
@@ -13,11 +34,12 @@ Kill tasks listening to port specified by user parameter
 The port number that is currently listened by targeting tasks
 #>
 
+    [CmdletBinding()]
     param
     (
         [Parameter(Position=0, Mandatory=$true)]
         [int] $Port,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Position=1, Mandatory=$false)]
         [switch] $Force
     )
 
@@ -45,3 +67,6 @@ The port number that is currently listened by targeting tasks
     }
 
 }
+
+Kill-PortListeners $Port $Force 
+
