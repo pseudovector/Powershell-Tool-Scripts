@@ -15,3 +15,7 @@
 *.swp
 *~
 *.un~
+
+# VSCode
+.vscode
+.metals
