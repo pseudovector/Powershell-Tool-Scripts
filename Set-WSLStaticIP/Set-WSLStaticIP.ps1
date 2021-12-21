@@ -22,6 +22,7 @@ function Set-WSLStaticIP {
     $wslSubnet = ""
     $windowsHostname = "windows.wsl"
     $wslHostname = ""
+    $wslDistName = "Ubuntu"
 
     function Test-IPAddress ([String] $IPAddress) {
         return $IPAddress -match [ipaddress] $IPAddress
@@ -31,22 +32,18 @@ function Set-WSLStaticIP {
     }
 
     function Test-BusyFile([string] $filePath) {
-        if(Get-Content $filePath  | Select-Object -First 1)
-        {
+        if (Get-Content $filePath  | Select-Object -First 1) {
             write-host (Get-DateTime) "[Test-BusyFile][FILEAVAILABLE]" $filePath
             return $false
         }
-        else
-        {
+        else {
             write-host (Get-DateTime) "[Test-BusyFile][FILELOCKED] $filePath is locked"
             return $true
         }
     }
 
-    function Add-HostsEntry ([String] $fileName, [String] $hostName, [String] $ipAddress, [String] $description="") 
-    {
-        if ($hostName -ne "localhost" -and (Test-IPAddress $ipAddress))
-        {
+    function Add-HostsEntry ([String] $fileName, [String] $hostName, [String] $ipAddress, [String] $description = "") {
+        if ($hostName -ne "localhost" -and (Test-IPAddress $ipAddress)) {
             do {
                 Start-Sleep -Seconds 2
             } while (Test-BusyFile $fileName)
@@ -54,16 +51,17 @@ function Set-WSLStaticIP {
             Remove-HostsEntry $fileName $hostName
             if ([string]::IsNullOrEmpty($description)) {
                 $ipAddress + "`t`t" + $hostName | Out-File -Encoding ASCII -Append $fileName
-            } else {
+            }
+            else {
                 $ipAddress + "`t`t" + $hostName + "`t`t # " + $description | Out-File -Encoding ASCII -Append $fileName
             }
-        } else {
+        }
+        else {
             throw "Invalid IPAddress or Hostname, Hostname can not be 'localhost'"
         }
     }
 
-    function Remove-HostsEntry ([String] $fileName, [String] $hostName) 
-    {
+    function Remove-HostsEntry ([String] $fileName, [String] $hostName) {
         do {
             Start-Sleep -Seconds 2
         } while (Test-BusyFile $fileName)
@@ -72,15 +70,14 @@ function Set-WSLStaticIP {
         $newLines = @()
 
         # Remove lines match hostname
-        foreach ($line in $f) 
-        {
+        foreach ($line in $f) {
             $bits = [regex]::Split($line, "\s+") | Where-Object { $_ }
-            if (( -not $line.startsWith("#")) -and ( $null -ne $bits ) -and ($bits.Count -eq 2 -or $bits.Count -eq 3 )) 
-            {
+            if (( -not $line.startsWith("#")) -and ( $null -ne $bits ) -and ($bits.Count -eq 2 -or $bits.Count -eq 3 )) {
                 if ($bits[1] -ne $hostName) {
                     $newLines += $line
                 }
-            } else {
+            }
+            else {
                 $newLines += $line
             }
         }
@@ -94,11 +91,11 @@ function Set-WSLStaticIP {
 
     try {
         $null, $wslHosts = (wsl -l -v) | Where-Object { $null -ne $_ -and $_ -ne "" }
-        foreach($wslHost in $wslHosts) {
+        foreach ($wslHost in $wslHosts) {
             $hostInfo = $wslHost.Split(" ") | Where-Object { $null -ne $_ -and $_ -ne "" } 
             if ($hostInfo[0] -eq '*' -and $hostInfo.Count -ge 2 ) {
                 $hostname = $hostInfo[1] 
-                $hostname = $hostname -replace '[\W]',''
+                $hostname = $hostname -replace '[\W]', ''
                 $wslHostname = $hostname.toLower() + ".wsl"
                 break
             }
@@ -110,10 +107,10 @@ function Set-WSLStaticIP {
             Copy-Item -Path $hostsFile -Destination $hostsFileBackup
 
             # Clean up existing network interface addresses
-            (wsl -d ubuntu -u root ip addr del $wslIp/32 dev eth0:1)
+            (wsl -d $wslDistName -u root ip addr del $wslIp/32 dev eth0:1)
             (cmd /c netsh int ip delete address "vEthernet (WSL)" $windowsIp 255.255.255.0)
             Write-Host "Existing WSL addresses removed"
-            $WslAddIpResult = (wsl -d ubuntu -u root ip addr add $wslIp/24 broadcast $wslSubnet dev eth0 label eth0:1)
+            $WslAddIpResult = (wsl -d $wslDistName -u root ip addr add $wslIp/24 broadcast $wslSubnet dev eth0 label eth0:1)
             if ([string]::IsNullOrEmpty($WslAddIpResult)) {
                 $winAddIpResult = (cmd /c netsh int ip add address "vEthernet (WSL)" $windowsIp 255.255.255.0)
                 if ([string]::IsNullOrEmpty($winAddIpResult)) {
