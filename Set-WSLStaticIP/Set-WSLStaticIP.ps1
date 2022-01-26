@@ -66,11 +66,11 @@ function Set-WSLStaticIP {
                 Start-Sleep -Seconds 2
             } while (Test-BusyFile $fileName)
 
-            if ($ipAddress -ne (Get-HostEntrie $fileName $hostsName)) {
+            if ($ipAddress -ne (Get-HostsEntry $fileName $hostName)) {
                 Remove-HostsEntry $fileName $hostName
             }
 
-            if ($null -eq (Get-HostEntrie $fileName $hostsName)) {
+            if ($null -eq (Get-HostsEntry $fileName $hostName)) {
                 if ([string]::IsNullOrEmpty($description)) {
                     $ipAddress + "`t`t" + $hostName | Out-File -Encoding ASCII -Append $fileName
                 }
@@ -112,6 +112,10 @@ function Set-WSLStaticIP {
         }
     }
 
+    function Add-WslDnsNameserver() {
+        wsl -d $wslDistName -u root bash -c "echo -e nameserver $windowsIp > /etc/resolv.conf"
+    }
+
     try {
         $null, $wslHosts = (wsl -l -v) | Where-Object { $null -ne $_ -and $_ -ne "" }
         foreach ($wslHost in $wslHosts) {
@@ -139,6 +143,7 @@ function Set-WSLStaticIP {
                 if ([string]::IsNullOrEmpty($winAddIpResult)) {
                     Add-HostsEntry $hostsFile $windowsHostname $windowsIp
                     Add-HostsEntry $hostsFile $wslHostname $wslIp
+                    Add-WslDnsNameserver
                 }
             } 
         }
