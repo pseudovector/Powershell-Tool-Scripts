@@ -33,12 +33,30 @@ function Set-WSLStaticIP {
 
     function Test-BusyFile([string] $filePath) {
         if (Get-Content $filePath  | Select-Object -First 1) {
-            write-host (Get-DateTime) "[Test-BusyFile][FILEAVAILABLE]" $filePath
+            Write-Host (Get-DateTime) "[Test-BusyFile][FILEAVAILABLE]" $filePath
             return $false
         }
         else {
-            write-host (Get-DateTime) "[Test-BusyFile][FILELOCKED] $filePath is locked"
+            Write-Host (Get-DateTime) "[Test-BusyFile][FILELOCKED] $filePath is locked"
             return $true
+        }
+    }
+
+    function Get-HostsEntry ([String] $filename, [String] $hostName) {
+        if ([string]::IsNullOrEmpty($hostName) -or $hostName -ne "localhost") {
+            $f = Get-Content $filename
+            foreach ($line in $f) {
+                $bits = [regex]::Split($line, "\s+") | Where-Object { $_ }
+                if (( -not $line.startsWith("#")) -and ( $null -ne $bits ) -and ($bits.Count -eq 2 -or $bits.Count -eq 3 )) {
+                    if ($bits[1] -eq $hostName) {
+                        return $bits[0]
+                    }
+                }
+            }
+            return $null
+        }
+        else {
+            throw "Invalid IPAddress or Hostname, Hostname can not be 'localhost'"
         }
     }
 
@@ -48,12 +66,17 @@ function Set-WSLStaticIP {
                 Start-Sleep -Seconds 2
             } while (Test-BusyFile $fileName)
 
-            Remove-HostsEntry $fileName $hostName
-            if ([string]::IsNullOrEmpty($description)) {
-                $ipAddress + "`t`t" + $hostName | Out-File -Encoding ASCII -Append $fileName
+            if ($ipAddress -ne (Get-HostEntrie $fileName $hostsName)) {
+                Remove-HostsEntry $fileName $hostName
             }
-            else {
-                $ipAddress + "`t`t" + $hostName + "`t`t # " + $description | Out-File -Encoding ASCII -Append $fileName
+
+            if ($null -eq (Get-HostEntrie $fileName $hostsName)) {
+                if ([string]::IsNullOrEmpty($description)) {
+                    $ipAddress + "`t`t" + $hostName | Out-File -Encoding ASCII -Append $fileName
+                }
+                else {
+                    $ipAddress + "`t`t" + $hostName + "`t`t # " + $description | Out-File -Encoding ASCII -Append $fileName
+                }
             }
         }
         else {
