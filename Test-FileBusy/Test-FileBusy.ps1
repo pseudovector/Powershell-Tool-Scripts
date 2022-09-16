@@ -1,23 +1,17 @@
 #requires -version 5.0
 ###############################################################################
-# Copyright (c) 2021 - Pseudovector
+#  Pseudovector
 # 
-# Do whatever you want with this module, but please do give credit.
+
 ###############################################################################
 
 # Always make sure all variables are defined and all best practices are 
 # followed.
-# Set-StrictMode -version Latest
+Set-StrictMode -version Latest
 
 ###############################################################################
 # Public Cmdlets
 ###############################################################################
-[CmdletBinding()]
-param
-(
-    [Parameter(Position=0, Mandatory=$true)]
-    [string] $FilePath
-)
 
 function Test-FileBusy {
         <#
@@ -31,9 +25,10 @@ function Test-FileBusy {
         The path of the file to examine
         #>
 
+        [CmdletBinding()]
         param
         (
-            [Parameter(Mandatory=$true)]
+            [Parameter(Position=0, Mandatory=$true)]
             [string] $FilePath
         )
 

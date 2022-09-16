@@ -1,8 +1,7 @@
 #requires -version 5.0
 ###############################################################################
-# Copyright (c) 2021 - Pseudovector
+#  Pseudovector
 # 
-# Do whatever you want with this module, but please do give credit.
 ###############################################################################
 
 # Always make sure all variables are defined and all best practices are 
@@ -15,7 +14,6 @@ Set-StrictMode -version Latest
 
 $hostsFile = "$env:SystemRoot\System32\drivers\etc\hosts"
 $hostsFileBackup = "$env:SystemRoot\System32\drivers\etc\hosts.bak"
-
 
 function Test-IPAddress ([String] $IPAddress) {
     return $IPAddress -match [ipaddress] $IPAddress

@@ -1,8 +1,7 @@
 #requires -version 5.0
 ###############################################################################
-# Copyright (c) 2021 - Pseudovector
+#  Pseudovector
 # 
-# Do whatever you want with this module, but please do give credit.
 ###############################################################################
 
 # Always make sure all variables are defined and all best practices are 
@@ -23,6 +22,7 @@ param
 
 function Kill-PortListeners 
 {
+
 <#
 .SYNOPSIS
 Kill tasks listening to port specified by user parameter
@@ -47,7 +47,7 @@ The port number that is currently listened by targeting tasks
     {
         [int[]]$pids = Invoke-Expression "netstat -ano" | findstr /I "listening" | findstr /R /C:":$port " | ForEach-Object {($_ -split "\s+")[5]} 
         Write-Host $pids
-        $pids = $pids | Select -Unique
+        $pids = $pids | Select-Object -Unique
         foreach ($pid in @($pids))
         {
             Write-Verbose "Found processes: $pids"

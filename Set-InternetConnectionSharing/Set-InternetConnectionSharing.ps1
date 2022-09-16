@@ -1,14 +1,14 @@
 #requires -version 5.0
 ###############################################################################
-# Copyright (c) 2021 - Pseudovector
+#  Pseudovector
 # 
 # Forked form https://github.com/mikefrobbins/PowerShell/blob/master/MrToolkit/Public/Set-MrInternetConnectionSharing.ps1 by Mike F Robbins
-# Do whatever you want with this module, but please do give credit.
+
 ###############################################################################
 
 # Always make sure all variables are defined and all best practices are 
 # followed.
-# Set-StrictMode -version Latest
+Set-StrictMode -version Latest
 
 ###############################################################################
 # Public Cmdlets

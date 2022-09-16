@@ -1,30 +1,18 @@
 #requires -version 5.0
 ###############################################################################
-# Copyright (c) 2021 - Pseudovector
+#  Pseudovector
 # 
-# Do whatever you want with this module, but please do give credit.
 ###############################################################################
 
 # Always make sure all variables are defined and all best practices are 
 # followed.
-# Set-StrictMode -version Latest
+Set-StrictMode -version Latest
 
 ###############################################################################
 # Public Cmdlets
 ###############################################################################
-[CmdletBinding()]
-param
-(
-    [Parameter(Position = 0, Mandatory = $false, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [string] $InstallPath = "$env:USERPROFILE",
-    [Parameter(Position = 1, Mandatory = $false, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [string] $RegistryProp = "PATH",
-    [Parameter(Position = 2, Mandatory = $false, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [switch] $Force
-)
-
 function Install-Rbenv {
-    <#
+<#
 .SYNOPSIS
 Install rbenv-win
 
