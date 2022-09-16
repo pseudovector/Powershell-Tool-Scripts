@@ -17,8 +17,8 @@ function Set-WSLStaticIP {
     $hostsFile = "$env:SystemRoot\System32\drivers\etc\hosts"
     $hostsFileBackup = "$env:SystemRoot\System32\drivers\etc\hosts.bak"
 
-    $windowsIp = "172.154.101.1"
-    $wslIp = "172.154.101.101"
+    $windowsIp = "172.144.111.1"
+    $wslIp = "172.144.111.101"
     $wslSubnet = ""
     $windowsHostname = "windows.wsl"
     $wslHostname = ""
